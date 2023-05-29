@@ -22,13 +22,14 @@ export class WhatsappService extends Client {
   constructor() {
     super({
       puppeteer: {
+        headless: true,
         // Si se ejecuta en linux normalmente el path de google chrome es el siguiente
         // executablePath: '/usr/bin/google-chrome',
         // Si se ejecuta en Macos el path es el siguiente
         // executablePath: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
-        executablePath:
+        //executablePath:
           //   '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
-          '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+          //'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
         args: ['--no-sandbox'],
       },
     });
