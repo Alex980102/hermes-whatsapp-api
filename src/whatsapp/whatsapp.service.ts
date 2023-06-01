@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Client } from 'whatsapp-web.js';
+import { Client, LocalAuth } from 'whatsapp-web.js';
 import { MessageMediaDto } from './dto/message-media.dto';
 import { MessageTxtDto } from './dto/message-txt.dto';
 import * as fs from 'fs';
@@ -21,6 +21,7 @@ export class WhatsappService extends Client {
   status = false;
   constructor() {
     super({
+      authStrategy: new LocalAuth(),
       puppeteer: {
         headless: true,
         args: ['--no-sandbox'],
