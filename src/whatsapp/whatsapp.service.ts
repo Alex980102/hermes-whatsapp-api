@@ -23,13 +23,6 @@ export class WhatsappService extends Client {
     super({
       puppeteer: {
         headless: true,
-        // Si se ejecuta en linux normalmente el path de google chrome es el siguiente
-        // executablePath: '/usr/bin/google-chrome',
-        // Si se ejecuta en Macos el path es el siguiente
-        // executablePath: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
-        //executablePath:
-          //   '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
-          //'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
         args: ['--no-sandbox'],
       },
     });
@@ -95,14 +88,58 @@ export class WhatsappService extends Client {
       if (message.from === 'status@broadcast') {
         return;
       }
+
+      // Método para connectarnos con openai
+
+      let user_id = message.from;
+      console.log(user_id);
+
+      // Simula que el bot está escribiendo una respuesta
+      const chat = await message.getChat();
+      chat.sendStateTyping();
+
+      // Envía una solicitud POST a tu API de FastAPI
+      try {
+        const response = await axios.post(`${process.env.API_URL}/message/`, {
+          user_id: user_id,
+          message: message.body,
+          prompt: process.env.PROMPT
+        });
+
+        // Detiene la simulación de escritura
+        chat.clearState();
+
+        console.log(response.data);
+
+        // Envía la respuesta del asistente al cliente de WhatsApp
+        if (response.data && response.data.message) {
+          await message.reply(response.data.message);
+        } else {
+          console.error("Error al obtener la respuesta del asistente");
+          await message.reply(
+            "Error al comunicarse con nuestro asistente me podrías escribir otra vez tu pregunta?"
+          );
+        }
+      } catch (error) {
+        // Detiene la simulación de escritura
+        chat.clearState();
+        console.error("Error al comunicarse con la API:", error);
+        await message.reply(
+          "Error al comunicarse con nuestro asistente me podrías escribir otra vez tu pregunta?"
+        );
+      }
+
+      // Método para connectarnos con openai
+
+      // Métodos para guardar mensaje entrante en la base de datos
+
       const _send = message;
       console.log('---------------Message------------------');
       // console.log(_send);
       // console.log(_send.from.split('@')[0]);
       console.log('---------------Message------------------');
       const userId: AxiosResponse<MessengerCreateResponse> = await axios.get(
-        `${process.env.MAIN_URL}/api/user/botmessage/${
-          _send.from.split('@')[0]
+        `${process.env.MAIN_URL}/api/user/botmessage/${_send.from.split('@')[0]
         }`,
       );
       console.log(_send.to.split('@')[0]);
@@ -159,7 +196,7 @@ export class WhatsappService extends Client {
         `${process.env.MAIN_URL}/api/messenger/${_myPhone}`,
       );
       console.log(_messengerId.data.user.botProcessId);
-      
+
       await axios.delete(
         `${process.env.MAIN_URL}/api/botprocess/removepm2/${_messengerId.data.user.botProcessId}`,
       );
@@ -180,6 +217,7 @@ export class WhatsappService extends Client {
     console.log(
       '--------------------------------SendMessageText----------------------------------',
     );
+
     return { ok: send['ok'], msg: send['msg'], status: send['status'] };
   }
 
@@ -191,16 +229,4 @@ export class WhatsappService extends Client {
     const send = await sendFileApi(this, phoneNumber, path, caption);
     return { ok: send['ok'], msg: send['msg'], status: send['status'] };
   }
-
-  // create(createWhatsappDto: MessageTxtDto) {
-  //   return 'This action adds a new whatsapp';
-  // }
-
-  // findAll() {
-  //   return `This action returns all whatsapp`;
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} whatsapp`;
-  // }
 }
