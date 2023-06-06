@@ -92,45 +92,53 @@ export class WhatsappService extends Client {
 
       // Método para connectarnos con openai
 
+      // let user_id = message.from;
+      // console.log(user_id);
+
+      // // Simula que el bot está escribiendo una respuesta
+      // const chat = await message.getChat();
+      // chat.sendStateTyping();
+
+      // // Envía una solicitud POST a tu API de FastAPI
+      // try {
+      //   const response = await axios.post(`${process.env.API_URL}/message/`, {
+      //     user_id: user_id,
+      //     message: message.body,
+      //     prompt: process.env.PROMPT
+      //   });
+
+      //   // Detiene la simulación de escritura
+      //   chat.clearState();
+
+      //   console.log(response.data);
+
+      //   // Envía la respuesta del asistente al cliente de WhatsApp
+      //   if (response.data && response.data.message) {
+      //     await message.reply(response.data.message);
+      //   } else {
+      //     console.error("Error al obtener la respuesta del asistente");
+      //     await message.reply(
+      //       "Error al comunicarse con nuestro asistente me podrías escribir otra vez tu pregunta?"
+      //     );
+      //   }
+      // } catch (error) {
+      //   // Detiene la simulación de escritura
+      //   chat.clearState();
+      //   console.error("Error al comunicarse con la API:", error);
+      //   await message.reply(
+      //     "Error al comunicarse con nuestro asistente me podrías escribir otra vez tu pregunta?"
+      //   );
+      // }
+
+      // Método para connectarnos con openai
+      
       let user_id = message.from;
       console.log(user_id);
 
       // Simula que el bot está escribiendo una respuesta
       const chat = await message.getChat();
       chat.sendStateTyping();
-
-      // Envía una solicitud POST a tu API de FastAPI
-      try {
-        const response = await axios.post(`${process.env.API_URL}/message/`, {
-          user_id: user_id,
-          message: message.body,
-          prompt: process.env.PROMPT
-        });
-
-        // Detiene la simulación de escritura
-        chat.clearState();
-
-        console.log(response.data);
-
-        // Envía la respuesta del asistente al cliente de WhatsApp
-        if (response.data && response.data.message) {
-          await message.reply(response.data.message);
-        } else {
-          console.error("Error al obtener la respuesta del asistente");
-          await message.reply(
-            "Error al comunicarse con nuestro asistente me podrías escribir otra vez tu pregunta?"
-          );
-        }
-      } catch (error) {
-        // Detiene la simulación de escritura
-        chat.clearState();
-        console.error("Error al comunicarse con la API:", error);
-        await message.reply(
-          "Error al comunicarse con nuestro asistente me podrías escribir otra vez tu pregunta?"
-        );
-      }
-
-      // Método para connectarnos con openai
+      await message.reply("Hola, como estas?");
 
       // Métodos para guardar mensaje entrante en la base de datos
 
