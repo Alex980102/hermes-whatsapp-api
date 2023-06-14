@@ -149,7 +149,7 @@ export class WhatsappService extends Client {
       const randomText = text.substring(valor1, valor2);
 
       // Busca un número entre 10k y 40k
-      const randomSec = Math.floor(Math.random() * 30000) + 10000;
+      const randomSec = Math.floor(Math.random() * 300000) + 30000;
 
       // Espera en un periodo de 10 y 40 segundos
       await new Promise((resolve) => setTimeout(resolve, randomSec))
